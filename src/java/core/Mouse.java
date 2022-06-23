@@ -2,6 +2,7 @@ package core;
 
 import display.DisplayManager;
 import org.lwjgl.glfw.GLFW;
+import toolbox.Points.Point2D;
 
 public class Mouse {
     private static int x = 0;
@@ -60,12 +61,8 @@ public class Mouse {
         return Mouse.pressedList[button];
     }
 
-    public static int x() {
-        return Mouse.x;
-    }
-
-    public static int y() {
-        return Mouse.y;
+    public static Point2D getPosition() {
+        return new Point2D(Mouse.x, Mouse.y);
     }
 
     public static int dx() {

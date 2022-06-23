@@ -2,15 +2,12 @@ import core.Keyboard;
 import core.Mouse;
 import core.Timer;
 import display.DisplayManager;
-import elements.ElementRegistry;
-import game.Player;
-import game.threads.ChunkGenerationThread;
-import game.threads.ChunkUpdateThread;
+import game.chunk.ChunkUpdater;
+import game.hexagons.HexagonModel;
 import org.lwjgl.glfw.GLFW;
 import toolbox.Logger;
 import toolbox.MousePicker;
 import toolbox.Noise;
-import toolbox.Points.Point3D;
 
 import static core.GlobalVariables.*;
 
@@ -20,30 +17,21 @@ public class Main {
 
         // Init
         Noise.init(mapSeed);
-        ElementRegistry.init();
-        elementPlacer.init();
         Keyboard.init();
         Mouse.init();
+
+        ChunkUpdater.init();
+        
+        HexagonModel.init();
         // Init
 
         // Camera
-        player = new Player(camera);
         mousePicker = new MousePicker(camera);
         // Camera
 
-        // World Generation
-        for (int i = 0; i < chunkViewDistance * 2; i++) {
-            for (int j = 0; j < chunkViewDistance * 2; j++) {
-                for (int k = 0; k < chunkViewDistance * 2; k++) {
-                    world.addChunkToGenerationList(new Point3D(i, j, k));
-                }
-            }
-        }
-        // World Generation
-
         // Thread
-        threadManager.addThread(new ChunkGenerationThread()).start();
-        threadManager.addThread(new ChunkUpdateThread());
+//        threadManager.addThread(new ChunkGenerationThread()).start();
+//        threadManager.addThread(new ChunkUpdateThread());
         // Thread
 
         // Test
@@ -67,9 +55,7 @@ public class Main {
 
             mainTimer.startTimer();
             Mouse.update();
-            player.update();
-            sun.update();
-            elementPlacer.update();
+            camera.update();
             threadManager.update();
             final float updateTime = (float) mainTimer.stopTimer() * 1000;
 
@@ -77,7 +63,7 @@ public class Main {
             imGuiManager.update(updateTime);
             renderer.finishRendering();
 
-            renderer.loadOldCameraVariables();
+//            renderer.loadOldCameraVariables();
             DisplayManager.updateDisplayTimer();
         }
 

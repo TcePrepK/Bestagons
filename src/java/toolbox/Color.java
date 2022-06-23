@@ -1,7 +1,9 @@
 package toolbox;
 
+import static core.GlobalVariables.rand;
+
 public class Color {
-    private final float r, g, b, a;
+    public final float r, g, b, a;
 
     public Color() {
         r = g = b = a = 0;
@@ -21,19 +23,7 @@ public class Color {
         a = 1;
     }
 
-    public float getR() {
-        return r;
-    }
-
-    public float getG() {
-        return g;
-    }
-
-    public float getB() {
-        return b;
-    }
-
-    public float getA() {
-        return a;
+    public static Color randomColor() {
+        return new Color(rand.nextInt(256) / 256f, rand.nextInt(256) / 256f, rand.nextInt(256) / 256f, rand.nextInt(256) / 256f);
     }
 }

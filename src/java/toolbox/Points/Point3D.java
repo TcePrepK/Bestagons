@@ -48,6 +48,14 @@ public class Point3D {
         return new Point3D(x * v, y * v, z * v);
     }
 
+    public Point3D div(final Point3D v) {
+        return new Point3D(x / v.x, y / v.y, z / v.z);
+    }
+
+    public Vector3D div(final Vector3D v) {
+        return new Vector3D(x / v.x, y / v.y, z / v.z);
+    }
+
     public Point3D div(final int v) {
         return new Point3D(x / v, y / v, z / v);
     }

@@ -20,6 +20,10 @@ public class Maths {
         );
     }
 
+    public static int sign(final int n) {
+        return Integer.compare(n, 0);
+    }
+
     public static boolean closeEnough(final float v, final float k, final float n) {
         return Math.abs(v - k) <= n;
     }

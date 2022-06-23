@@ -1,18 +1,17 @@
 package core;
 
 import display.DisplayManager;
-import game.threads.ChunkGenerationThread;
+import game.Camera;
 import imgui.ImGui;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
-import imgui.type.ImInt;
 import toolbox.Logger;
 import toolbox.Octatree;
-import toolbox.Points.Point3D;
 
 import java.util.List;
 
-import static core.GlobalVariables.*;
+import static core.GlobalVariables.camera;
+import static core.GlobalVariables.renderer;
 
 public class ImGuiManager {
     private final ImGuiImplGlfw imGuiGlfw = new ImGuiImplGlfw();
@@ -63,84 +62,64 @@ public class ImGuiManager {
         ImGui.spacing();
         // FPS
 
-        // Output Control
-        if (ImGui.treeNode("Output Options")) {
-            final String[] options = renderer.getAttachmentManager().keys();
-            int selectedOption = 0;
-            for (int i = 0; i < options.length; i++) {
-                if (options[i].equals(outputOption)) {
-                    selectedOption = i;
-                    break;
-                }
-            }
+        // CAMERA
+        final float[] pitch = new float[]{-Camera.CAMERA_PITCH};
+        ImGui.text("Character Tile: " + camera.getCameraTile().toString());
+        ImGui.sliderFloat("Camera Pitch", pitch, 0, 60);
+        Camera.CAMERA_PITCH = -pitch[0];
+        // CAMERA
 
-            final ImInt selected = new ImInt(selectedOption);
-            ImGui.listBox("##Options", selected, options, 5);
-            outputOption = options[selected.get()];
+//        // Output Control
+//        if (ImGui.treeNode("Output Options")) {
+//            final String[] options = renderer.getAttachmentManager().keys();
+//            int selectedOption = 0;
+//            for (int i = 0; i < options.length; i++) {
+//                if (options[i].equals(outputOption)) {
+//                    selectedOption = i;
+//                    break;
+//                }
+//            }
+//
+//            final ImInt selected = new ImInt(selectedOption);
+//            ImGui.listBox("##Options", selected, options, 5);
+//            outputOption = options[selected.get()];
+//
+//            ImGui.treePop();
+//        }
+//        ImGui.spacing();
+//        ImGui.spacing();
+//        // Output Control
 
-            ImGui.treePop();
-        }
-        ImGui.spacing();
-        ImGui.spacing();
-        // Output Control
+//        // World Generation
+//        if (ImGui.checkbox("Generate World", generateWorld)) {
+//            generateWorld = !generateWorld;
+//        }
+//
+//        ImGui.spacing();
+//        ImGui.spacing();
+//        // World Generation
 
-        // Ray Control
-        if (ImGui.checkbox("Path Tracing", pathTracing)) {
-            pathTracing = !pathTracing;
-        }
+//        // World
+//        final Point3D worldScale = world.getWorldScale();
+//        final ChunkGenerationThread generationThread = (ChunkGenerationThread) threadManager.getThread("chunkGenerationThread");
+//
+//        ImGui.text("World: " + worldScale.x + "x" + worldScale.y + "x" + worldScale.z);
+//        ImGui.text("World generation percentage: " + generationThread.getGeneratePercentage() + "%");
+//        ImGui.text("World generation time: " + generationThread.getThreadAliveTime() + "sec");
+//        ImGui.text("Estimated generation time: " + generationThread.getEstimatedTime() + "sec");
+//
+//        ImGui.spacing();
+//        ImGui.spacing();
+//        // World
 
-        if (ImGui.checkbox("Render Bitmask Borders", drawBitmaskBorders)) {
-            drawBitmaskBorders = !drawBitmaskBorders;
-        }
-
-        if (ImGui.button("Reset Frame Counter")) {
-            renderer.resetFrameCounter = true;
-        }
-
-        final int[] bounceInt = new int[]{lightBounceAmount};
-        if (ImGui.sliderInt("Bounce Amount", bounceInt, 0, 25)) {
-            lightBounceAmount = bounceInt[0];
-        }
-
-        ImGui.spacing();
-
-        if (ImGui.checkbox("Update Sun", updateSun)) {
-            updateSun = !updateSun;
-        }
-
-        ImGui.spacing();
-        ImGui.spacing();
-        // Ray Control
-
-        // World Generation
-        if (ImGui.checkbox("Generate World", generateWorld)) {
-            generateWorld = !generateWorld;
-        }
-
-        ImGui.spacing();
-        ImGui.spacing();
-        // World Generation
-
-        // World
-        final Point3D worldScale = world.getWorldScale();
-        final ChunkGenerationThread generationThread = (ChunkGenerationThread) threadManager.getThread("chunkGenerationThread");
-
-        ImGui.text("World: " + worldScale.x + "x" + worldScale.y + "x" + worldScale.z);
-        ImGui.text("World generation percentage: " + generationThread.getGeneratePercentage() + "%");
-        ImGui.text("World generation time: " + generationThread.getThreadAliveTime() + "sec");
-
-        ImGui.spacing();
-        ImGui.spacing();
-        // World
-
-        // World Update
-        if (ImGui.checkbox("Update World", updateWorld)) {
-            updateWorld = !updateWorld;
-        }
-
-        ImGui.text("Amount of chunks to update: " + chunkManager.getChunkUpdateList().size());
-        ImGui.text("Chunk update time: " + threadManager.getThread("chunkUpdateThread").getLoopTime() + "ms");
-        // World Update
+//        // World Update
+//        if (ImGui.checkbox("Update World", updateWorld)) {
+//            updateWorld = !updateWorld;
+//        }
+//
+//        ImGui.text("Amount of chunks to update: " + chunkManager.getChunkUpdateList().size());
+//        ImGui.text("Chunk update time: " + threadManager.getThread("chunkUpdateThread").getLoopTime() + "ms");
+//        // World Update
 
         ImGui.end();
         ImGui.render();

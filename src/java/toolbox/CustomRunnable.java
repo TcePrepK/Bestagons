@@ -1,5 +1,5 @@
 package toolbox;
 
-public interface CustomRunnable {
-    public void run(Object arg);
+public interface CustomRunnable<V, T> {
+    V run(T arg);
 }

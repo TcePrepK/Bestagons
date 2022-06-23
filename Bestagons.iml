@@ -44,5 +44,6 @@
     <orderEntry type="library" name="Maven: org.lwjgl:lwjgl-opengl:natives-macos:3.2.3" level="project" />
     <orderEntry type="library" name="Maven: io.github.spair:imgui-java-binding:1.86.0" level="project" />
     <orderEntry type="library" name="Maven: io.github.spair:imgui-java-lwjgl3:1.86.0" level="project" />
+    <orderEntry type="library" name="Maven: org.jetbrains:annotations:23.0.0" level="project" />
   </component>
 </module>

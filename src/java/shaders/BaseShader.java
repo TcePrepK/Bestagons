@@ -1,10 +1,11 @@
 package shaders;
 
 import org.joml.Matrix4f;
-import org.joml.Vector2f;
 import org.joml.Vector4f;
 import toolbox.Color;
+import toolbox.Points.Point2D;
 import toolbox.Points.Point3D;
+import toolbox.Vector2D;
 import toolbox.Vector3D;
 
 import java.io.BufferedReader;
@@ -91,8 +92,12 @@ public abstract class BaseShader {
         glUniform1i(location, value);
     }
 
-    protected static void load2DVector(final int location, final Vector2f vector) {
-        glUniform2f(location, vector.x(), vector.y());
+    protected static void load2DVector(final int location, final Vector2D vector) {
+        glUniform2f(location, vector.x, vector.y);
+    }
+
+    protected static void load2DVector(final int location, final Point2D vector) {
+        glUniform2i(location, vector.x, vector.y);
     }
 
     protected static void load3DVector(final int location, final Vector3D vector) {
@@ -107,8 +112,8 @@ public abstract class BaseShader {
         glUniform4f(location, vector.x(), vector.y(), vector.z(), vector.w());
     }
 
-    protected static void load4DVector(final int location, final Color vector) {
-        glUniform4f(location, vector.getR(), vector.getG(), vector.getB(), vector.getA());
+    protected static void load4DVector(final int location, final Color color) {
+        glUniform4f(location, color.r, color.g, color.b, color.a);
     }
 
     protected static void loadBoolean(final int location, final boolean value) {

@@ -54,6 +54,8 @@ public class DisplayManager {
         Logger.out("~ Viewport Set Successfully");
 
         DisplayManager.fpsTimer.startTimer();
+
+        org.lwjgl.glfw.GLFW.glfwSetCursorPos(DisplayManager.windowID, DisplayManager.WIDTH / 2f, DisplayManager.HEIGHT / 2f);
     }
 
     public static void updateDisplayTimer() {

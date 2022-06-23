@@ -50,7 +50,10 @@ public class Vector3D {
     }
 
     public Vector3D rotateX(final float a) {
-        return new Vector3D(x, y, z);
+        final float sin = (float) Math.sin(a);
+        final float cos = (float) Math.cos(a);
+
+        return new Vector3D(x, z * sin + y * cos, z * cos - y * sin);
     }
 
     public Vector3D rotateY(final float a) {
@@ -134,9 +137,18 @@ public class Vector3D {
         return new Vector3D(x / v.x, y / v.y, z / v.z);
     }
 
+    public Vector3D div(final Point3D v) {
+        return new Vector3D(x / v.x, y / v.y, z / v.z);
+    }
+
     @Override
     public String toString() {
         return "(X:" + x + " Y:" + y + " Z:" + z + ")";
+    }
+
+    @Override
+    public Vector3D clone() {
+        return new Vector3D(x, y, z);
     }
 
     public Vector3f toVector3f() {
