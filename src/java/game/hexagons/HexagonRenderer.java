@@ -99,9 +99,9 @@ public class HexagonRenderer {
         final Point2D cameraPos = camera.getCameraTile();
         final List<Chunk> visibleChunks = new ArrayList<>();
 
-        final int scale = 5;
+        final int scale = 7;
         for (int i = -scale; i <= scale; i++) {
-            for (int j = -scale; j <= scale; j++) {
+            for (int j = -scale * 2; j <= 0; j++) {
                 visibleChunks.add(chunkManager.getChunkWorldSpace(cameraPos.add(i * mapChunkSize, j * mapChunkSize), true));
             }
         }

@@ -17,7 +17,7 @@ import static display.DisplayManager.*;
 public class Camera {
     public static final float FOV = 90;
     public static final float NEAR_PLANE = 1;
-    public static final float FAR_PLANE = 1000;
+    public static final float FAR_PLANE = 5000;
 
     public static float CAMERA_PITCH = -45;
     public static float SPEED = 25;

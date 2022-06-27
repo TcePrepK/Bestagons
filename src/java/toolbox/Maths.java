@@ -28,6 +28,14 @@ public class Maths {
         return Math.abs(v - k) <= n;
     }
 
+    /**
+     * [0, 1] -> [0, 1]
+     * s variables determines how fast it will rise (0, 5)
+     */
+    public static float weirdLerp(final float n, final float s) {
+        return (float) Math.pow(2, (n - 1) / (s * n * n));
+    }
+
     public static float barryCentric(final Vector3f p1, final Vector3f p2, final Vector3f p3, final Vector2f pos) {
         final float det = (p2.z - p3.z) * (p1.x - p3.x) + (p3.x - p2.x) * (p1.z - p3.z);
         final float l1 = ((p2.z - p3.z) * (pos.x - p3.x) + (p3.x - p2.x) * (pos.y - p3.z)) / det;

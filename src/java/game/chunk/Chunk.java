@@ -6,6 +6,7 @@ import game.resources.ResourceTypes;
 import game.resources.ResourcesModel;
 import game.tiles.TileTypes;
 import toolbox.Color;
+import toolbox.Maths;
 import toolbox.Noise;
 import toolbox.Points.Point2D;
 
@@ -37,7 +38,7 @@ public class Chunk {
 
                 final float noise = getNoise(x, y, 50);
                 final float scaledNoise = (noise + 1) / 2;
-                tileGrid[idx] = Math.min((int) (Math.pow(scaledNoise, 1.5f) * (TileTypes.size() + 1)), TileTypes.size() - 1);
+                tileGrid[idx] = Math.min((int) (Maths.weirdLerp(scaledNoise, 1.5f) * TileTypes.size()), TileTypes.size() - 1);
             }
         }
 
@@ -53,13 +54,16 @@ public class Chunk {
                     continue;
                 }
 
-                final float noise = getNoise(x, y, 20);
-                final float scaledNoise = (noise + 1) / 2;
-                if (scaledNoise < 0.5) {
+                if (getNoise(x, y, 100) < 0) {
                     continue;
                 }
-                
-                resourceGrid[idx] = (int) Math.min(Math.pow(scaledNoise, 1) * (ResourceTypes.size() + 1), ResourceTypes.size() - 1) + 1;
+
+                final float scaledNoise = getNoise(x, y, 1);
+                if (scaledNoise < 0) {
+                    continue;
+                }
+
+                resourceGrid[idx] = (int) Math.min(Math.pow(scaledNoise, 2) * (ResourceTypes.size() + 1), ResourceTypes.size() - 1) + 1;
             }
         }
 

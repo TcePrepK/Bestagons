@@ -18,6 +18,6 @@ void main(void) {
     originalPos.x += scalePos.x * sin60;
     originalPos.y += (3.0 / 4.0) * scalePos.y;
 
-    gl_Position = PVMatrix * vec4(originalPos, position.z, 1.0);
+    gl_Position = PVMatrix * vec4(originalPos, position.z * pentagonScale, 1.0);
     vertexColor = color;
 }

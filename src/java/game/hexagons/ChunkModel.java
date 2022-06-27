@@ -1,6 +1,7 @@
 package game.hexagons;
 
 import core.RawModel;
+import models.HexagonModel;
 import toolbox.Color;
 import toolbox.Points.Point2D;
 import toolbox.Vector2D;
@@ -27,7 +28,7 @@ public class ChunkModel {
                 final Color color = Color.randomColor();
                 for (int j = 0; j < 6; j++) {
                     final int idx = hexIndex * 18 + j * 3;
-                    final Vector2D corner = HexagonModel.hexagon[j];
+                    final Vector2D corner = HexagonModel.positions[j];
 
                     final float cornerX = hexX + corner.x;
                     final float cornerY = hexY + corner.y;

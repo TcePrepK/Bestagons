@@ -1,8 +1,11 @@
 package game.resources;
 
 import core.RawModel;
-import game.hexagons.HexagonModel;
+import models.CubeModel;
+import models.HexagonModel;
+import toolbox.Color;
 import toolbox.Vector2D;
+import toolbox.Vector3D;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,10 +18,14 @@ public class ResourcesModel {
         final int cW = mapChunkSize;
         final int cH = mapChunkSize;
 
+        final float tileW = 0.8660f;
+        final float tileH = 0.75f;
+
         final List<Float> positions = new ArrayList<>();
         final List<Integer> indices = new ArrayList<>();
         final List<Byte> colors = new ArrayList<>();
 
+        int lastIndex = 0;
         for (int y = 0; y < cH; y++) {
             for (int x = 0; x < cW; x++) {
                 final int idx = x + y * cW;
@@ -27,12 +34,32 @@ public class ResourcesModel {
                     continue;
                 }
 
-                final int hexIndex = positions.size() / 18;
-                final float hexX = (x + (y % 2) * 0.5f) * 0.8660f;
-                final float hexY = y * 0.75f;
+                final float hexX = (x + (y % 2) * 0.5f) * tileW;
+                final float hexY = y * tileH;
+
+                if (resource == 1) {
+                    final float depth = 5;
+                    final Color color = Color.randomColor();
+                    for (final Vector3D corner : CubeModel.calculatePositions(0.5f, 0.5f, depth)) {
+                        positions.add(hexX + corner.x + tileW / 2f);
+                        positions.add(hexY + corner.y + 1 / 2f);
+                        positions.add(corner.z + depth / 2);
+
+                        colors.add((byte) (0xFF * color.r));
+                        colors.add((byte) (0xFF * color.g));
+                        colors.add((byte) (0xFF * color.b));
+                    }
+
+                    for (int i = 0; i < CubeModel.indices.length; i++) {
+                        indices.add(CubeModel.indices[i] + lastIndex);
+                    }
+                    lastIndex += CubeModel.positions.length;
+
+                    continue;
+                }
 
                 for (int j = 0; j < 6; j++) {
-                    final Vector2D corner = HexagonModel.hexagon[j];
+                    final Vector2D corner = HexagonModel.positions[j];
 
                     final float cornerX = hexX + corner.x;
                     final float cornerY = hexY + corner.y;
@@ -41,13 +68,15 @@ public class ResourcesModel {
                     positions.add(cornerY);
                     positions.add(1f);
 
-                    colors.add((byte) (0xFF * (resource == 1 ? 1 : 0)));
+                    colors.add((byte) 0);
                     colors.add((byte) (0xFF * (resource == 2 ? 1 : 0)));
                     colors.add((byte) 0x00);
-
-                    indices.add(HexagonModel.indices[j * 2] + hexIndex * 6);
-                    indices.add(HexagonModel.indices[j * 2 + 1] + hexIndex * 6);
                 }
+
+                for (int i = 0; i < HexagonModel.indices.length; i++) {
+                    indices.add(HexagonModel.indices[i] + lastIndex);
+                }
+                lastIndex += HexagonModel.positions.length;
             }
         }
 
