@@ -43,8 +43,9 @@ public class DisplayManager {
 
         glfwSetWindowSizeCallback(DisplayManager.windowID, DisplayManager::screenResize);
 
-        final Dimension monitor = Toolkit.getDefaultToolkit().getScreenSize();
-        glfwSetWindowPos(DisplayManager.windowID, (monitor.width - DisplayManager.WIDTH) / 2, (monitor.height - DisplayManager.HEIGHT) / 2);
+        final DisplayMode displayMode = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDisplayMode();
+        // final Dimension monitor = Toolkit.getDefaultToolkit().getScreenSize();
+        glfwSetWindowPos(DisplayManager.windowID, (displayMode.getWidth() - DisplayManager.WIDTH) / 2, (displayMode.getHeight() - DisplayManager.HEIGHT) / 2);
         glfwMakeContextCurrent(DisplayManager.windowID);
         GL.createCapabilities();
         glfwSwapInterval(0);
@@ -75,6 +76,8 @@ public class DisplayManager {
     private static void screenResize(final long window, final int width, final int height) {
         DisplayManager.WIDTH = width;
         DisplayManager.HEIGHT = height;
+        
+        GL11.glViewport(0, 0, DisplayManager.WIDTH, DisplayManager.HEIGHT);
         DisplayManager.screenSizeChange.dispatch();
     }
 

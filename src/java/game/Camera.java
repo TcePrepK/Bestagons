@@ -91,7 +91,7 @@ public class Camera {
     public Point2D getCameraTile() {
         final float scale = GlobalVariables.hexagonScale;
         final Vector2D tilePosition = position.clone().add(0, (float) Math.tan(Math.toRadians(Camera.CAMERA_PITCH)) * Camera.zoom).div((float) Math.sin(Math.toRadians(60)), 3 / 4f);
-        tilePosition.x -= (((int) Math.abs(Math.floor(tilePosition.y / scale))) % 2) * scale / 2;
+        tilePosition.x += (((int) Math.abs(Math.floor(tilePosition.y / scale))) % 2) * scale / 2;
         final Vector2D scaledPosition = tilePosition.div(scale);
 
         float modX = Math.abs(scaledPosition.x % 1);
@@ -107,7 +107,7 @@ public class Camera {
         if (modY > 2 / 3f) {
             modY = (modY - 2 / 3f) * 3;
             if (modY > 1 - 2 * Math.abs(modX - 0.5f)) {
-                if (Math.abs(Math.floor(scaledPosition.y)) % 2 == 1) {
+                if (Math.abs(Math.floor(scaledPosition.y + 1)) % 2 == 1) {
                     scaledPosition.x++;
                 }
 
@@ -132,7 +132,7 @@ public class Camera {
 
         final float time = Camera.zoom / ray.z;
         final Vector2D rayPosition = new Vector2D(-ray.x, ray.y).mult(time).add(camera.position).div((float) Math.sin(Math.toRadians(60)), 3 / 4f);
-        rayPosition.x -= (((int) Math.abs(Math.floor(rayPosition.y / scale))) % 2) * scale / 2;
+        rayPosition.x += (((int) Math.abs(Math.floor(rayPosition.y / scale))) % 2) * scale / 2;
         final Vector2D scaledPosition = rayPosition.div(scale);
 
         float modX = Math.abs(scaledPosition.x % 1);
@@ -148,7 +148,7 @@ public class Camera {
         if (modY > 2 / 3f) {
             modY = (modY - 2 / 3f) * 3;
             if (modY > 1 - 2 * Math.abs(modX - 0.5f)) {
-                if (Math.abs(Math.floor(scaledPosition.y)) % 2 == 1) {
+                if (Math.abs(Math.floor(scaledPosition.y + 1)) % 2 == 1) {
                     scaledPosition.x++;
                 }
 

@@ -39,13 +39,24 @@ public class HexagonRenderer {
 
         final List<Chunk> visibleChunks = HexagonRenderer.calculateVisibleChunks();
         for (final Chunk chunk : visibleChunks) {
-            glBindVertexArray(chunk.getModel().getVaoID());
+            glBindVertexArray(chunk.getTileModel().getVaoID());
             glEnableVertexAttribArray(0);
             glEnableVertexAttribArray(1);
 
             chunkShader.loadPosition(chunk.getPos());
 
-            glDrawElements(GL_TRIANGLES, chunk.getModel().getVertexCount(), GL_UNSIGNED_INT, 0);
+            glDrawElements(GL_TRIANGLES, chunk.getTileModel().getVertexCount(), GL_UNSIGNED_INT, 0);
+
+            glDisableVertexAttribArray(1);
+            glDisableVertexAttribArray(0);
+
+            glBindVertexArray(chunk.getResourceModel().getVaoID());
+            glEnableVertexAttribArray(0);
+            glEnableVertexAttribArray(1);
+
+            chunkShader.loadPosition(chunk.getPos());
+
+            glDrawElements(GL_TRIANGLES, chunk.getResourceModel().getVertexCount(), GL_UNSIGNED_INT, 0);
 
             glDisableVertexAttribArray(1);
             glDisableVertexAttribArray(0);
@@ -106,5 +117,6 @@ public class HexagonRenderer {
 
     public void cleanUp() {
         hexagonShader.cleanUp();
+        chunkShader.cleanUp();
     }
 }

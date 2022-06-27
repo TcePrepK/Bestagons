@@ -21,5 +21,5 @@ void main(void) {
     originalPos.y += (3.0 / 4.0) * scalePos.y;
 
     vertexColor = color;
-    gl_Position = PVMatrix * vec4(originalPos, 0, 1);
+    gl_Position = PVMatrix * vec4(originalPos, 0.01, 1);
 }

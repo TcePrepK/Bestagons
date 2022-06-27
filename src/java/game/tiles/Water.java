@@ -1,4 +1,4 @@
-package game.tileTypes;
+package game.tiles;
 
 public class Water {
     public static TileTypes update(final int[] neighbors) {

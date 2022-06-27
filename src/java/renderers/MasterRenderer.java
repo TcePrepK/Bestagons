@@ -29,7 +29,7 @@ public class MasterRenderer {
 //            attachmentManager.updateResolutions(WIDTH, HEIGHT);
 //        });
 
-//        glEnable(GL_DEPTH_TEST);
+        glEnable(GL_DEPTH_TEST);
     }
 
     public void render() {

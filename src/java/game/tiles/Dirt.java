@@ -1,24 +1,24 @@
-package game.tileTypes;
+package game.tiles;
 
-public class Sand {
+public class Dirt {
     public static TileTypes update(final int[] neighbors) {
         final int dirtAmount = neighbors[0];
         final int grassAmount = neighbors[1];
         final int sandAmount = neighbors[2];
         final int waterAmount = neighbors[3];
 
-        if (waterAmount >= 4) {
+        if (waterAmount >= 3) {
             return TileTypes.Water;
         }
 
-        if (waterAmount == 0) {
-            return TileTypes.Dirt;
+        if (waterAmount > 0) {
+            return TileTypes.Grass;
         }
 
-        if (waterAmount == 1) {
-            return TileTypes.Water;
+        if (grassAmount > dirtAmount) {
+            return TileTypes.Grass;
         }
 
-        return TileTypes.Sand;
+        return TileTypes.Dirt;
     }
 }

@@ -1,69 +1,82 @@
 package game.chunk;
 
 import core.RawModel;
-import game.hexagons.HexagonNeighbor;
 import game.hexagons.MinecraftChunkModel;
-import game.tileTypes.TileTypes;
+import game.resources.ResourceTypes;
+import game.resources.ResourcesModel;
+import game.tiles.TileTypes;
 import toolbox.Color;
+import toolbox.Noise;
 import toolbox.Points.Point2D;
 
-import static core.GlobalVariables.*;
-import static game.tileTypes.TileTypes.colorGradient;
+import static core.GlobalVariables.mapChunkSize;
+import static game.tiles.TileTypes.colorGradient;
 
 public class Chunk {
     private final Point2D pos;
-    private RawModel model;
 
-    private int[] grid = new int[mapChunkSize * mapChunkSize];
+    private RawModel tileModel;
+    private RawModel resourceModel;
+
+    private final int[] tileGrid = new int[mapChunkSize * mapChunkSize];
+    private final int[] resourceGrid = new int[mapChunkSize * mapChunkSize];
 
     public Chunk(final int x, final int y) {
         pos = new Point2D(x, y).mult(mapChunkSize);
 
-        build();
+        buildTiles();
+        buildResources();
+
+        // preWorldUpdate();
     }
 
-    public void build() {
+    public void buildTiles() {
         for (int x = 0; x < mapChunkSize; x++) {
             for (int y = 0; y < mapChunkSize; y++) {
                 final int idx = x + y * mapChunkSize;
-                grid[idx] = rand.nextInt(4);
+
+                final float noise = getNoise(x, y, 50);
+                final float scaledNoise = (noise + 1) / 2;
+                tileGrid[idx] = Math.min((int) (Math.pow(scaledNoise, 1.5f) * (TileTypes.size() + 1)), TileTypes.size() - 1);
             }
         }
 
-        model = MinecraftChunkModel.createModel(pos, getColorGrid());
+        tileModel = MinecraftChunkModel.createModel(pos, getColorGrid());
     }
 
-    public void update() {
-        final int[] nextGrid = new int[grid.length];
+    public void buildResources() {
         for (int x = 0; x < mapChunkSize; x++) {
             for (int y = 0; y < mapChunkSize; y++) {
-                checkForTile(x, y, nextGrid);
+                final int idx = x + y * mapChunkSize;
+
+                if (tileGrid[idx] != 2) {
+                    continue;
+                }
+
+                final float noise = getNoise(x, y, 20);
+                final float scaledNoise = (noise + 1) / 2;
+                if (scaledNoise < 0.5) {
+                    continue;
+                }
+                
+                resourceGrid[idx] = (int) Math.min(Math.pow(scaledNoise, 1) * (ResourceTypes.size() + 1), ResourceTypes.size() - 1) + 1;
             }
         }
 
-        grid = nextGrid;
-
-        loader.cleanModel(model);
-        model = MinecraftChunkModel.createModel(pos, getColorGrid());
+        resourceModel = ResourcesModel.createModel(resourceGrid);
     }
 
-    private void checkForTile(final int x, final int y, final int[] nextGrid) {
-        final Point2D[] offsets = HexagonNeighbor.getNeighbors(y);
-        final int[] neighbors = new int[TileTypes.values().length];
+    public float getNoise(final int x, final int y, final float scale) {
+        final int tilePositionY = y + pos.y;
+        final float tilePositionX = (x + pos.x) + (Math.abs(tilePositionY) % 2) * 0.5f;
 
-        for (final Point2D offset : offsets) {
-            final int offX = x + offset.x;
-            final int offY = y + offset.y;
-            if (Chunk.outBounds(offX, offY)) {
-                final Chunk chunk = chunkManager.getChunkWorldSpace(pos.x + offX, pos.y + offY, true);
-                neighbors[chunk.getTile((offX + 32) % 32, (offY + 32) % 32)]++;
-                continue;
-            }
+        final float tileX = tilePositionX * 0.8660f / scale;
+        final float tileY = tilePositionY * 0.75f / scale;
 
-            neighbors[getTile(offX, offY)]++;
-        }
-
-        nextGrid[Chunk.getIDX(x, y)] = TileTypes.update(getTile(x, y), neighbors);
+        return (float) Noise.noise(tileX * 1, tileY * 1) * 0.5f +
+                (float) Noise.noise(tileX * 2, tileY * 2) * 0.25f +
+                (float) Noise.noise(tileX * 3, tileY * 3) * 0.15f +
+                (float) Noise.noise(tileX * 4, tileY * 4) * 0.1f;
     }
 
     public int[] getColorGrid() {
@@ -72,16 +85,12 @@ public class Chunk {
             for (int y = 0; y < mapChunkSize; y++) {
                 final int idx = x + y * mapChunkSize;
 
-                final Color color = colorGradient[grid[idx]];
+                final Color color = colorGradient[tileGrid[idx]];
                 colorGrid[idx] = ((int) color.r << 16) + ((int) color.g << 8) + ((int) color.b);
             }
         }
 
         return colorGrid;
-    }
-
-    public int getTile(final int x, final int y) {
-        return grid[Chunk.getIDX(x, y)];
     }
 
     public static int getIDX(final int x, final int y) {
@@ -96,8 +105,12 @@ public class Chunk {
         return pos;
     }
 
-    public RawModel getModel() {
-        return model;
+    public RawModel getTileModel() {
+        return tileModel;
+    }
+
+    public RawModel getResourceModel() {
+        return resourceModel;
     }
 }
     

@@ -2,7 +2,6 @@ import core.Keyboard;
 import core.Mouse;
 import core.Timer;
 import display.DisplayManager;
-import game.chunk.ChunkUpdater;
 import game.hexagons.HexagonModel;
 import org.lwjgl.glfw.GLFW;
 import toolbox.Logger;
@@ -20,8 +19,8 @@ public class Main {
         Keyboard.init();
         Mouse.init();
 
-        ChunkUpdater.init();
-        
+        // ChunkUpdater.init();
+
         HexagonModel.init();
         // Init
 
