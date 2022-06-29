@@ -20,6 +20,7 @@ public class Camera {
     public static final float FAR_PLANE = 5000;
 
     public static float CAMERA_PITCH = -45;
+    public static float CAMERA_ROLL = 0;
     public static float SPEED = 25;
 
     public static float zoom = 50;
@@ -51,16 +52,6 @@ public class Camera {
 //        matrixWatcher.add(() -> {
 //            renderer.loadCameraVariablesNextFrame();
 //        });
-
-        final float off = 0.1f;
-        Keyboard.keyPressed.add(() -> {
-            Camera.desiredZoom *= 1 + off;
-            Camera.SPEED *= 1 + off;
-        }, "Q");
-        Keyboard.keyPressed.add(() -> {
-            Camera.desiredZoom *= 1 - off;
-            Camera.SPEED *= 1 - off;
-        }, "E");
 
         screenSizeChange.add(this::screenResize);
     }
@@ -166,7 +157,9 @@ public class Camera {
     private void calculateRayVariables() {
 //        final Vector3D cameraDirection = new Vector3D(0, 0, 1);
 
-        final Vector3D cameraDirection = new Vector3D(0, 0, -1).rotateX((float) Math.toRadians(Camera.CAMERA_PITCH));
+        final Vector3D cameraDirection = new Vector3D(0, 0, -1)
+                .rotateX((float) Math.toRadians(Camera.CAMERA_PITCH))
+                .rotateZ((float) Math.toRadians(-Camera.CAMERA_ROLL));
         final Vector3D camRightVector = new Vector3D(viewMatrix.m00(), viewMatrix.m10(), viewMatrix.m20());
         final Vector3D camUpVector = new Vector3D(viewMatrix.m01(), viewMatrix.m11(), viewMatrix.m21());
 
@@ -181,7 +174,8 @@ public class Camera {
 
     private void checkInputs() {
         velocity.set(0, 0);
-        final float scale = Keyboard.isKeyDown(Keyboard.LSHIFT) ? 5 : 1;
+//        final float scale = Keyboard.isKeyDown(Keyboard.LSHIFT) ? 5 : 1;
+        final float scale = Keyboard.isKeyDown("C") ? 5 : 1;
 
         if (Keyboard.isKeyDown("W")) {
             velocity.y = -Camera.SPEED * scale;
@@ -194,6 +188,23 @@ public class Camera {
         } else if (Keyboard.isKeyDown("D")) {
             velocity.x = Camera.SPEED * scale;
         }
+
+        if (Keyboard.isKeyDown("Q")) {
+            CAMERA_ROLL += -0.1;
+        } else if (Keyboard.isKeyDown("E")) {
+            CAMERA_ROLL += 0.1;
+        }
+
+        final float off = 0.01f;
+        if (Keyboard.isKeyDown(Keyboard.SPACE)) {
+            Camera.desiredZoom *= 1 + off;
+            Camera.zoom *= 1 + off;
+            Camera.SPEED *= 1 + off;
+        } else if (Keyboard.isKeyDown(Keyboard.LSHIFT)) {
+            Camera.desiredZoom *= 1 - off;
+            Camera.zoom *= 1 - off;
+            Camera.SPEED *= 1 - off;
+        }
     }
 
     private void screenResize() {
@@ -205,9 +216,9 @@ public class Camera {
 
         // ViewMatrix
         viewMatrix.identity();
-        viewMatrix.rotate((float) Math.toRadians(Camera.CAMERA_PITCH), new Vector3f(1, 0, 0));
+        viewMatrix.rotate((float) Math.toRadians(CAMERA_PITCH), new Vector3f(1, 0, 0));
 //        viewMatrix.rotate((float) Math.toRadians(yaw), new Vector3f(0, 1, 0));
-//        viewMatrix.rotate((float) Math.toRadians(roll), new Vector3f(0, 0, 1));
+        viewMatrix.rotate((float) Math.toRadians(CAMERA_ROLL), new Vector3f(0, 0, 1));
         viewMatrix.translate(-position.x, position.y, -Camera.zoom);
 
         // ProjectionViewMatrix

@@ -57,7 +57,10 @@ public class Vector3D {
     }
 
     public Vector3D rotateY(final float a) {
-        return new Vector3D(x, y, z);
+        final float sin = (float) Math.sin(a);
+        final float cos = (float) Math.cos(a);
+
+        return new Vector3D(x * cos - z * sin, y, x * sin + z * cos);
     }
 
     public Vector3D rotateZ(final float a) {

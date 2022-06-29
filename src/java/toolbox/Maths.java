@@ -2,6 +2,7 @@ package toolbox;
 
 import org.joml.Vector2f;
 import org.joml.Vector3f;
+import toolbox.Points.Point2D;
 
 public class Maths {
     public static Vector3D max(final Vector3D a, final Vector3D b) {
@@ -18,6 +19,44 @@ public class Maths {
                 Math.max(a.y, v),
                 Math.max(a.z, v)
         );
+    }
+
+    public static Point2D max(final Point2D a, final Point2D b) {
+        return new Point2D(
+                Math.max(a.x, b.x),
+                Math.max(a.y, b.y)
+        );
+    }
+
+    public static Point2D min(final Point2D a, final Point2D b) {
+        return new Point2D(
+                Math.min(a.x, b.x),
+                Math.min(a.y, b.y)
+        );
+    }
+
+    /**
+     * @param p1 Top point
+     * @param p2 Bottom point
+     * @param y  Starts from 0 (p1.y)
+     */
+    public static float xValueInLine(final Vector2D p1, final Vector2D p2, final float y) {
+        return p2.x + (p1.x - p2.x) / (p1.y - p2.y) * y;
+    }
+
+    public static float calculateSlope(final Point2D p1, final Point2D p2) {
+        return (p1.x - p2.x) / (float) (p1.y - p2.y);
+    }
+
+    /**
+     * @param p1 Top point
+     * @param p2 Bottom point
+     * @param y  Starts from 0 (p1.y)
+     */
+    public static int xValueInLine(final Point2D p1, final Point2D p2, final float y) {
+        final float m = calculateSlope(p1, p2);
+        final int x = (m < 0) ? Math.max(p1.x, p2.x) : Math.min(p1.x, p2.x);
+        return x + (int) Math.floor(m * y);
     }
 
     public static int sign(final int n) {

@@ -55,6 +55,10 @@ public class ChunkManager {
         return new Vector2D(x, y).div(mapChunkSize).toPoint2D();
     }
 
+    public static Point2D getChunkPosition(final Point2D tile) {
+        return new Vector2D(tile).div(mapChunkSize).toPoint2D();
+    }
+
     public Chunk getChunkWithId(final String id) {
         return chunksById.get(id);
     }
